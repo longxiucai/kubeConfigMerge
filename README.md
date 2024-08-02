@@ -1,5 +1,5 @@
 # 说明
-* 如果多个文件内context的名称相同，则使用`文件名-文件内容的hash值`作为context名称
+* 如果多个文件内context的名称相同，则使用`文件名-对应的cluster的hash值`作为context名称
 * 自动选择最后合并的context作为current-context
 
 # 用法

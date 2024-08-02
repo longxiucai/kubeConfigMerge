@@ -2,7 +2,6 @@ package merge
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/imdario/mergo"
@@ -37,15 +36,15 @@ func (kc *KubeConfigOption) HandleContexts(oldConfig *clientcmdapi.Config, conte
 		}
 
 		if checkContextName(newName, oldConfig) {
-			fmt.Printf("Context「%s」name already exists, Using the file name and a hash of its contents as the context name\n", newName)
-			b, _ := os.ReadFile(kc.FileName)
-			suffix := util.HashSufString(string(b))
+			fmt.Printf("Context「%s」name already exists, Using the file name and a hash of its cluster's content as the context name\n", newName)
+			s := fmt.Sprint(kc.Config.Clusters[ctx.Cluster])
+			suffix := util.HashSufString(s)
 			newName = kc.FileName + "-" + suffix
 		}
 
 		itemConfig := kc.handleContext(oldConfig, newName, ctx)
 		newConfig = appendConfig(newConfig, itemConfig)
-		fmt.Printf("Add Context: %s from file:%s\n", newName, kc.FileName)
+		fmt.Printf("Add Context: %s, from file:%s\n", newName, kc.FileName)
 	}
 	outConfig := appendConfig(oldConfig, newConfig)
 	outConfig.CurrentContext = newName
